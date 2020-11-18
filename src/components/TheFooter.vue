@@ -6,7 +6,10 @@
   >
     <v-container>
       <v-row>
-        <v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-layout
             column
           >
@@ -22,7 +25,10 @@
             <v-divider class="my-2" />
           </v-layout>
         </v-col>
-        <v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-layout
             column
           >
@@ -31,7 +37,10 @@
             <span v-text="'Jalan Rantauan Darat RT.04 RW.01 Kelurahan Kelayan Selatan Banjarmasin Kode Pos 70246'" class="body-2" />
           </v-layout>
         </v-col>
-        <v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-layout
             column
           >

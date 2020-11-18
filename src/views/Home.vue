@@ -5,7 +5,7 @@
       <v-row>
         <v-col
           cols="12"
-          sm="8"
+          md="8"
         >
           <v-layout
             column
