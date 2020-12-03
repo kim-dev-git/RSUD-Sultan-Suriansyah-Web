@@ -3,7 +3,7 @@
     v-slot="{ hover }"
   >
     <v-card
-      @click="$router.push(data.link)"
+      @click="$router.push('/post/' + data.id)"
       flat
       outlined
     >
@@ -12,7 +12,7 @@
         style="overflow: hidden !important;"
       >
         <img id="post-cover-img"
-          :src="data.img"
+          :src="data.images[0].url"
           class="image"
           :class="{ 'image-hover': hover }"
         />
@@ -27,7 +27,7 @@
           rounded
           dark
         >
-        <span v-text="data.tag" />
+        <span v-text="data.author.displayName" />
         </v-sheet>
       </v-layout>
       <v-card-title id="post-title"
@@ -38,7 +38,8 @@
       <v-card-text id="post-content"
         class="pa-6 pt-0"
       >
-        <span v-html="truncate(data.content, 85)" />
+        <!-- <span v-html="truncate(data.content, 500)" /> -->
+        <span v-html="decodeHtml(data.content)" />
       </v-card-text>
       <v-divider class="mx-6" />
       <v-card-actions
@@ -48,7 +49,7 @@
           class="align-center"
         >
           <v-icon v-text="'mdi-calendar-outline'" small left />
-          <span v-text="data.createdAt" class="body-2 text--secondary" />
+          <span v-text="toDate(data.published)" class="body-2 text--secondary" />
         </v-layout>
       </v-card-actions>
     </v-card>
@@ -56,16 +57,25 @@
 </template>
 
 <script>
+
+import { toDate } from '../filter/date'
+
 export default {
   props: [
     'data'
   ],
   methods: {
+    toDate,
     truncate(text, max) {
       return text.substr(0,max-1)+(text.length>max?'&hellip;':'')
     },
     hovering() {
       console.log($("#post-cover-img"))
+    },
+    decodeHtml (html) {
+      var stripedHtml = html.replace(/<[^>]+>/g, '')
+      // var decodedStripedHtml = stripedHtml.decode(stripedHtml)
+      return this.truncate(stripedHtml, 80)
     }
   }
 }
@@ -73,8 +83,9 @@ export default {
 
 <style lang="scss" scoped>
   .image {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
+    max-height: 200px;
     object-fit: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -90,6 +101,12 @@ export default {
   }
   #post-title:hover {
     color: #039BE5;
+  }
+  #post-content img {
+    max-width: 200px;
+  }
+  .separator {
+    width: 100px !important;
   }
 </style>>
 

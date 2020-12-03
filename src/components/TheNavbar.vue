@@ -7,7 +7,7 @@
     >
       <v-container>
         <v-layout
-          :class="!$vuetify.breakpoint.mdAndUp ? 'mx-n6' : ''"
+          :class="!$vuetify.breakpoint.mdAndUp ? 'mx-n6' : 'mx-n4'"
           class="align-center"
         >
           <v-card-title v-text="'RSUD SS'" @click="$router.push('/')" style="cursor: pointer;" />

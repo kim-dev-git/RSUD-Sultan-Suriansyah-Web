@@ -1,14 +1,32 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Posts from '../views/Posts.vue'
+import Post from '../views/Post.vue'
 
 Vue.use(VueRouter)
+
+VueRouter.prototype.open = function (routeObject) {
+  const href = routeObject
+  window.open('' + href, '_blank')
+}
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/post',
+    name: 'Posts',
+    component: Posts
+  },
+  {
+    path: '/post/:id',
+    name: 'Post',
+    component: Post,
+    props: true
   },
   {
     path: '/about',
@@ -23,7 +41,10 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })
 
 export default router

@@ -1,8 +1,10 @@
 <template>
   <div>
-    <slider-image :items="items" />
+    <slider-image :items="posts" @click="$router.push(`/post/${$event.id}`)" />
     <v-container id="posts">
-      <v-row>
+      <v-row
+        class="mx-n2"
+      >
         <v-col
           cols="12"
           md="8"
@@ -16,16 +18,25 @@
           </v-layout>
           <v-row>
             <v-col
-              v-for="i in 8"
-              :key="i"
+              v-for="post in posts"
+              :key="post.id"
               cols="12"
               sm="6"
             >
-              <post-card :data="post" />
+              <post-card v-if="posts.length" :data="post" />
             </v-col>
           </v-row>
         </v-col>
       </v-row>
+
+      <v-btn
+        v-if="pageToken"
+        color="primary"
+        @click="nextPages ()"
+      >
+        <span v-text="'Lebih banyak'" />
+      </v-btn>
+      
     </v-container>
   </div>
 </template>
@@ -57,6 +68,22 @@ export default {
       content: 'RSUD Sultan Suriansyah resmi memiliki laboratorium Polymerase Chain Reaction (PCR) \n (Banjarmasin, 01/09/2020) Kini Rumah Sakit Sultan Suriansyah Banjarmasin telah memiliki Laboratorium Polymerase Chain Reaction (PCR) yang telah diresmikan pada tanggal tanggal 1 September 2020. Acara peresmian Laboratorium (PCR) tersebut dilakukan oleh Wali Kota Banjarmasin, Bapak H. Ibnu Sina, S.Pi., M.Si yang dihadiri oleh Kepala Dinas Kesehatan Kota Banjarmasin, Bapak Dr. Machli Riyadi, SH., MH. Serta jajaran pejabat tinggi di lingkungan Pemerintah Kota Banjarmasin.',
       link: '/aa'
     },
-  })
+  }),
+  computed: {
+    posts () {
+      return this.$store.state.blogPosts
+    },
+    pageToken () {
+      return this.$store.state.nextPageToken
+    }
+  },
+  methods: {
+    nextPages () {
+      this.$store.dispatch('nextPosts')
+    }
+  },
+  created () {
+    this.$store.dispatch('getPosts')
+  }
 }
 </script>

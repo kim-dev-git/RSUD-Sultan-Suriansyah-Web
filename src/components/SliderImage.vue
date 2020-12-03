@@ -3,16 +3,20 @@
     <template
       v-for="(i, index) in items"
     >
-      <swiper-slide :key="index" :style="getImage(i.img)">
+      <swiper-slide
+        :key="index"
+        :style="getImage(i.images[0].url)"
+      >
         <v-sheet
-          style="position: absolute; bottom: 0; background-color: rgba(0, 0, 0, .32); width: 100%;"
+          style="position: absolute; bottom: 0; background-color: rgba(0, 0, 0, .32); width: 100%; cursor: pointer;"
           class="pb-6"
+          @click="onClick(i)"
         >
           <v-layout
             column
             class="align-center justify-center py-4"
           >
-            <h3 v-text="i.text" class="white--text text-center headline" />
+            <h3 v-text="i.title" class="white--text text-center headline" />
           </v-layout>
         </v-sheet>
       </swiper-slide>
@@ -58,6 +62,10 @@ export default {
   methods: {
     getImage (url) {
       return `background-image:url(${url})`
+    },
+    onClick(item) {
+      console.log('item')
+      this.$emit('click', item)
     }
   }
 }
