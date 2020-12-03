@@ -16,7 +16,6 @@
             Loading
           </v-layout> -->
           <v-layout
-            v-else
             column
             class="content"
           >
