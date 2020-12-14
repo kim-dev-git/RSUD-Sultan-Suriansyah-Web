@@ -12,9 +12,10 @@ export default new Vuex.Store({
     apiKey: 'AIzaSyCokZna64OZdkWm_LdQ5L3OuUuyDgHrQC8',
     blogData: null,
     blogPosts: [],
+    blogRecentPosts: [],
     blogPost: null,
     nextPageToken: null,
-    postPerPage: 4
+    postPerPage: 6
   },
   mutations: {
     SET_BLOG_DATA: (state, data) => {
@@ -28,7 +29,11 @@ export default new Vuex.Store({
         state.blogPosts.push(post)
       })
     },
+    SET_BLOG_RECENT_POSTS: (state, data) => {
+      state.blogRecentPosts = data
+    },
     SET_BLOG_POST: (state, data) => {
+      state.blogPost = null
       state.blogPost = data
     },
   },
@@ -55,7 +60,7 @@ export default new Vuex.Store({
     },
     async getBlog ({ state, commit }) {
       const url = `https://www.googleapis.com/blogger/v3/blogs/${state.bloggerId}?key=${state.apiKey}`
-      axios.get(url)
+      await axios.get(url)
         .then(res => {
           commit('SET_BLOG_DATA', res.data)
           console.log(res.data)
@@ -66,7 +71,7 @@ export default new Vuex.Store({
     },
     async getPosts ({ state, commit }) {
       const url = `https://www.googleapis.com/blogger/v3/blogs/${state.bloggerId}/posts?key=${state.apiKey}&fetchImages=true&maxResults=${state.postPerPage}`
-      axios.get(url)
+      await axios.get(url)
         .then(res => {
           commit('SET_BLOG_POSTS', res.data.items)
           if(res.data && res.data.nextPageToken) {
@@ -74,7 +79,7 @@ export default new Vuex.Store({
           } else {
             state.nextPageToken = null
           }
-          console.log(res.data)
+          // console.log(res.data)
         })
         .catch(err => {
           console.log(err)
@@ -83,7 +88,7 @@ export default new Vuex.Store({
     async nextPosts ({ state, commit }) {
       // state.blogPosts = []
       const url = `https://www.googleapis.com/blogger/v3/blogs/${state.bloggerId}/posts?key=${state.apiKey}&fetchImages=true&maxResults=${state.postPerPage}&pageToken=${state.nextPageToken}`
-      axios.get(url)
+      await axios.get(url)
         .then(res => {
           commit('PUSH_BLOG_POSTS', res.data.items)
           if(res.data && res.data.nextPageToken) {
@@ -91,7 +96,18 @@ export default new Vuex.Store({
           } else {
             state.nextPageToken = null
           }
-          console.log(res.data)
+          // console.log(res.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    async getRecentPosts ({ state, commit }) {
+      const maxResults = 4
+      const url = `https://www.googleapis.com/blogger/v3/blogs/${state.bloggerId}/posts?key=${state.apiKey}&fetchImages=true&maxResults=${maxResults}`
+      await axios.get(url)
+        .then(res => {
+          commit('SET_BLOG_RECENT_POSTS', res.data.items)
         })
         .catch(err => {
           console.log(err)
@@ -100,7 +116,7 @@ export default new Vuex.Store({
     async getPost ({ state, commit }, postID ) {
       state.blogPost = null
       const url = `https://www.googleapis.com/blogger/v3/blogs/${state.bloggerId}/posts/${postID}?key=${state.apiKey}&fetchImages=true`
-      axios.get(url)
+      await axios.get(url)
         .then(res => {
           commit('SET_BLOG_POST', res.data)
           console.log(res.data)

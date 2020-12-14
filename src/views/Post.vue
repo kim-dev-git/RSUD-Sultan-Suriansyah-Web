@@ -1,7 +1,6 @@
 <template>
   <div>
-    <loading-page v-if="!post" />
-    <v-container v-else>
+    <v-container>
       <v-row
         class="mx-n1 mx-sm-n2"
       >
@@ -9,13 +8,9 @@
           cols="12"
           md="8"
         >
-          <!-- <v-layout
-            v-if="!post"
-            class="align-center justify-center"
-          >
-            Loading
-          </v-layout> -->
+          <loading-page v-if="!post" />
           <v-layout
+            v-else
             column
             class="content"
           >
@@ -50,12 +45,20 @@
             <span id="content" v-html="post ? post.content : ''" />
           </v-layout>
         </v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
+          <v-divider v-if="$vuetify.breakpoint.mdAndUp" vertical style="position: absolute;" />
+          <latest-posts :id="id" />
+        </v-col>
       </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
+import LatestPosts from '../components/LatestPosts.vue'
 import LoadingPage from '../components/LoadingPage.vue'
 
 import { toDate } from '../filter/date'
@@ -63,7 +66,8 @@ import { toDate } from '../filter/date'
 export default {
   props: ['id'],
   components: {
-    LoadingPage
+    LoadingPage,
+    LatestPosts
   },
   data: () => ({
     shareButtons: [
@@ -80,7 +84,17 @@ export default {
     toDate
   },
   created () {
-    this.$store.dispatch('getPost', this.id)
+    // this.$store.dispatch('getPost', this.id)
+  },
+  watch: {
+    id: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          this.$store.dispatch('getPost', this.id)
+        }
+      }
+    }
   }
 }
 </script>

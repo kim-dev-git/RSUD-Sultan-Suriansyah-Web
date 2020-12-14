@@ -1,43 +1,56 @@
 <template>
   <div>
-    <slider-image :items="posts" @click="$router.push(`/post/${$event.id}`)" />
-    <v-container id="posts">
-      <v-row
-        class="mx-n2"
-      >
-        <v-col
-          cols="12"
-          md="8"
+    <loading-page v-if="!loaded" />
+    <div v-else>
+      <slider-image :items="posts" @click="$router.push(`/post/${$event.id}`)" />
+      <v-container id="posts">
+        <v-row
+          class="mx-n2"
         >
-          <v-layout
-            column
-            class="mt-n4 mb-6"
+          <v-col
+            cols="12"
+            md="12"
           >
-            <v-card-title v-text="'Berita Terbaru'" class="headline ml-n4 mb-n3" />
-            <the-line />
-          </v-layout>
-          <v-row>
-            <v-col
-              v-for="post in posts"
-              :key="post.id"
-              cols="12"
-              sm="6"
+            <v-layout
+              column
+              class="mt-n4 mb-6"
             >
-              <post-card v-if="posts.length" :data="post" />
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+              <v-card-title v-text="'Berita Terbaru'" class="headline ml-n4 mb-n3" />
+              <the-line />
+            </v-layout>
+            <v-row>
+              <v-col
+                v-for="post in posts"
+                :key="post.id"
+                cols="12"
+                sm="6"
+                lg="4"
+              >
+                <post-card v-if="posts.length" :data="post" />
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
 
-      <v-btn
-        v-if="pageToken"
-        color="primary"
-        @click="nextPages ()"
-      >
-        <span v-text="'Lebih banyak'" />
-      </v-btn>
-      
-    </v-container>
+        <v-layout
+          v-if="pageToken"
+          column
+          class="mx-1 align-center"
+        >
+          <v-btn
+            block
+            color="primary"
+            :loading="requesting"
+            :disabled="requesting"
+            @click="nextPages ()"
+          >
+            <span v-text="'Lebih banyak'" />
+          </v-btn>
+
+        </v-layout>
+        
+      </v-container>
+    </div>
   </div>
 </template>
 
@@ -45,6 +58,7 @@
 import SliderImage from '../components/SliderImage.vue'
 import PostCard from '../components/PostCard.vue'
 import TheLine from '../components/TheLine.vue'
+import LoadingPage from '../components/LoadingPage.vue'
 
 export default {
   name: 'Home',
@@ -52,8 +66,11 @@ export default {
     SliderImage,
     PostCard,
     TheLine,
+    LoadingPage,
   },
   data: () => ({
+    loaded: false,
+    requesting: false,
     items: [
       { text: 'Ini adalah suatu berita yang ke satu', img: 'https://st3.depositphotos.com/1192060/18399/i/1600/depositphotos_183990154-stock-photo-doctor-examining-female-patient-lying.jpg' },
       { text: 'Dan ini berita yang ke-2', img: 'https://www.pandasecurity.com/en/mediacenter/src/uploads/2019/07/hospital.jpg' },
@@ -78,12 +95,15 @@ export default {
     }
   },
   methods: {
-    nextPages () {
-      this.$store.dispatch('nextPosts')
+    async nextPages () {
+      this.requesting = true
+      await this.$store.dispatch('nextPosts')
+      this.requesting = false
     }
   },
-  created () {
-    this.$store.dispatch('getPosts')
+  async created () {
+    await this.$store.dispatch('getPosts')
+    this.loaded = true
   }
 }
 </script>
