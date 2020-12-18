@@ -3,7 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Posts from '../views/Posts.vue'
 import Post from '../views/Post.vue'
+import Static from '../views/Static.vue'
 import Profile from '../views/Profile.vue'
+import Services from '../views/Services.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +24,17 @@ const routes = [
     path: '/profil',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/layanan',
+    name: 'Services',
+    component: Services
+  },
+  {
+    path: '/p/:postID',
+    name: 'Static',
+    component: Static,
+    props: true
   },
   {
     path: '/post',

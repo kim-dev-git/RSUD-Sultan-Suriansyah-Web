@@ -1,4 +1,4 @@
-export var profile = `<div class="post-body entry-content" id="post-body-2876688063802222938" itemprop="articleBody">
+export default `<div class="post-body entry-content" id="post-body-2876688063802222938" itemprop="articleBody">
 <meta content="  VISI  Sesuai dengan Visi, Misi Kota Banjarmasin dan untuk&nbsp; memberikan gambaran apa yang kita inginkan ke depan, maka ditetapkan Visi RSUD ..." name="twitter:description">
 <b><span style="font-size: large;"><br>
 </span></b> <div style="text-align: center;"><b><span style="font-size: large;">VISI</span></b></div><br>

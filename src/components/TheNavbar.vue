@@ -24,7 +24,8 @@
                 text
                 class="text-none"
                 active-class="primary--text"
-                :to="navigation.link"
+                :to="!navigation.newtab ? navigation.link : ''"
+                @click="goTo(navigation)"
                 exact
               >
                 <span v-text="navigation.text" class="subtitle font-weight-medium" />
@@ -56,7 +57,8 @@
                   <v-list-item
                     v-for="(item, index) in navigation.submenu"
                     :key="index"
-                    @click="$router.push(`/${item.link}`)"
+                    :to="!item.newtab ? item.link : ''"
+                    @click="goTo(item)"
                   >
                     <v-list-item-title
                       v-text="item.text"
@@ -92,8 +94,8 @@
           >
             <v-list-item
               v-if="!navigation.multimenu"
-              :key="navigation.link"
-              :to="navigation.link"
+              :key="'nav-' + navigation.link"
+              @click="goTo(navigation)"
             >
               <!-- <v-list-item-icon>
                 <v-icon>mdi-home</v-icon>
@@ -102,7 +104,7 @@
             </v-list-item>
             <v-list-group
               v-else
-              :key="navigation.link"
+              :key="'sub-' + navigation.link"
             >
               <template v-slot:activator>
                 <v-list-item-content>
@@ -112,8 +114,9 @@
 
               <v-list-item
                 v-for="child in navigation.submenu"
-                :key="child.link"
-                :to="child.link"
+                :key="'child-' + child.link"
+                @click="goTo(navigation)"
+                :to="!navigation.newtab ? navigation.link : ''"
                 class="ml-4"
               >
                 <v-list-item-content>
@@ -135,16 +138,35 @@ export default {
     drawer: false,
     group: null,
     navigations: [
-      { text: 'Beranda', link: '/', multimenu: false },
-      { text: 'Profil', link: '/profil', multimenu: false },
-      { text: 'Layanan', link: '/layanan', multimenu: false },
-      { text: 'Informasi', link: '/informasi', multimenu: true,
+      { text: 'Beranda', link: '/', multimenu: false, newtab: false },
+      { text: 'Profil', link: '/p/profil', multimenu: false, newtab: false },
+      { text: 'Layanan', link: '/p/layanan', multimenu: false, newtab: false },
+      { text: 'Informasi', link: '/informasi', multimenu: true, newtab: false,
         submenu: [
-          { text: 'Poliklinik', link: '/poliklinik' },
-          { text: 'Penunjang', link: '/penunjang' },
-          { text: 'Rawat Jalan', link: '/rawatjalan' },
-          { text: 'Rawat Inap', link: '/rawatinap' },
-          { text: 'Survei Kepuasan Masyarakat', link: '/survei' },
+          { text: 'Poliklinik', link: '/p/poliklinik', newtab: false },
+          { text: 'Penunjang', link: '/p/penunjang', newtab: false },
+          { text: 'Rawat Jalan', link: '/p/rawatjalan', newtab: false },
+          { text: 'Rawat Inap', link: '/p/rawatinap', newtab: false },
+          // { text: 'Survei Kepuasan Masyarakat', link: '/p/survei', newtab: false },
+        ]
+      },
+      { text: 'Poli Online', link: 'http://121.101.186.98/sultan_online', multimenu: false, newtab: true },
+      { text: 'SISMADAK', link: 'http://rsudss-sismadak.banjarmasinkota.go.id/', multimenu: false, newtab: true },
+      { text: 'Pengaduan Masyarakat', link: '/p/pengaduanmasyarakat', multimenu: false, newtab: false },
+      { text: 'Perpustakaan Online', link: '/perpustakaan', multimenu: true, newtab: false,
+        submenu: [
+          { text: 'E-Library', link: 'https://www.persi.or.id/e-library', newtab: true },
+          { text: 'Regulasi Undang-undang', link: 'https://www.persi.or.id/regulasi-persi/undang-undang', newtab: true },
+          { text: 'Regulasi Peraturan Presiden', link: 'https://www.persi.or.id/regulasi-persi/peraturan-presiden', newtab: true },
+          { text: 'Regulasi Peraturan Presiden', link: 'https://www.persi.or.id/regulasi-persi/peraturan-presiden', newtab: true },
+          { text: 'Regulasi Peraturan Pemerintah', link: 'https://www.persi.or.id/regulasi-persi/peraturan-pemerintah', newtab: true },
+          { text: 'Regulasi PERMENKES', link: 'https://www.persi.or.id/regulasi-persi/permenkes', newtab: true },
+          { text: 'Regulasi KEMENKES', link: 'https://www.persi.or.id/regulasi-persi/kepmenkes', newtab: true },
+          { text: 'Surat Edaran', link: 'https://persi.or.id/', newtab: true },
+          { text: 'Surat Edaran KEMENKES', link: 'https://www.persi.or.id/regulasi-persi/edaran/surat-edaran-kemenkes', newtab: true },
+          { text: 'Surat Edaran BPOM', link: 'https://www.persi.or.id/regulasi-persi/edaran/surat-edaran-bppom', newtab: true },
+          { text: 'Keputusan Menteri Lain', link: 'https://www.persi.or.id/regulasi-persi/keputusan-menteri-lain', newtab: true },
+          { text: 'Peraturan BPJS', link: 'https://www.persi.or.id/regulasi-persi/peraturan-bpjs', newtab: true },
         ]
       },
     ]
@@ -152,6 +174,14 @@ export default {
   methods: {
     test(on) {
       console.log(on)
+    },
+    goTo(navigation) {
+      // console.log('Go: ' + navigation)
+      if (navigation.newtab) {
+        this.$router.open(navigation.link)
+      } else {
+        // this.$router.push(navigation.link)
+      }
     }
   }
 }
